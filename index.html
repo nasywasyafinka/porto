@@ -1,275 +1,666 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nasywa Syafinka Widyamara</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <script src="js/script.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <nav>
-        <ul>
-          <li><a href="#about">About</a></li>
-          <li><a href="#education">Education</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#skill">Skills</a></li>
-          <li><a href="#contact">Contact</a></li>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nasywa Syafinka Widyamara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0e1a;
+    --panel:#121729;
+    --panel-2:#161c33;
+    --line:rgba(255,255,255,.10);
+    --paper:#eef0f7;
+    --muted:#9aa1b4;
+    --gold:#f2c14e;
+    --blue:#7dd3fc;
+    --mono:'JetBrains Mono', monospace;
+    --head:'Poppins', sans-serif;
+    --body:'Poppins', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation:none !important; transition:none !important;}
+  }
+
+  /* ---------- background: aurora over navy ---------- */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    overflow:hidden;
+    background:var(--ink);
+    transform:translateY(0);
+    transition:transform .1s linear;
+  }
+  .aurora{
+    position:absolute;
+    width:70vw; height:70vw;
+    max-width:900px; max-height:900px;
+    border-radius:50%;
+    filter:blur(85px);
+    mix-blend-mode:screen;
+    opacity:.8;
+    will-change:transform;
+  }
+  .aurora.a1{
+    top:-20%; left:-10%;
+    background:radial-gradient(circle at 40% 40%, #4ade80, transparent 65%);
+    animation:drift1 22s ease-in-out infinite;
+  }
+  .aurora.a2{
+    top:-10%; right:-15%;
+    background:radial-gradient(circle at 60% 40%, #22d3ee, transparent 65%);
+    animation:drift2 26s ease-in-out infinite;
+  }
+  .aurora.a3{
+    bottom:-25%; left:10%;
+    background:radial-gradient(circle at 50% 50%, #c084fc, transparent 65%);
+    animation:drift3 30s ease-in-out infinite;
+  }
+  .aurora.a4{
+    bottom:-15%; right:5%;
+    width:55vw; height:55vw;
+    background:radial-gradient(circle at 50% 50%, #f472b6, transparent 65%);
+    opacity:.5;
+    animation:drift4 24s ease-in-out infinite;
+  }
+  @keyframes drift1{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(6%,8%) scale(1.12);}
+  }
+  @keyframes drift2{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(-8%,6%) scale(1.08);}
+  }
+  @keyframes drift3{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(5%,-6%) scale(1.15);}
+  }
+  @keyframes drift4{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(-6%,-8%) scale(1.1);}
+  }
+  .grid-bg::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 0%, var(--ink) 92%);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .aurora{animation:none !important;}
+  }
+
+  /* ---------- layout shells ---------- */
+  main{position:relative; z-index:1;}
+  section{
+    max-width:880px;
+    margin:0 auto;
+    padding:100px 32px 40px;
+    scroll-margin-top:80px;
+  }
+  #hero{max-width:960px; padding-top:70px; min-height:100vh; display:flex; align-items:center;}
+
+  .cell-tag{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--gold);
+    letter-spacing:.02em;
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:3px 8px;
+    border-radius:3px;
+    margin-bottom:18px;
+  }
+
+  h2.section-title{
+    font-family:var(--head);
+    font-weight:600;
+    font-size:clamp(26px,3.4vw,34px);
+    color:var(--paper);
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:36px;
+  }
+  h2.section-title::before{
+    content:attr(data-cell);
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--blue);
+    font-weight:500;
+  }
+
+  /* ---------- reveal-on-scroll ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ---------- hero ---------- */
+  .hero-text{position:relative;}
+  .hero-eyebrow{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--blue);
+    margin-bottom:14px;
+  }
+  .hero-eyebrow .blink{
+    display:inline-block;
+    width:8px; height:14px;
+    background:var(--gold);
+    margin-left:4px;
+    vertical-align:middle;
+    animation:blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+  h1{
+    font-family:var(--head);
+    font-weight:700;
+    font-size:clamp(40px,7vw,76px);
+    line-height:1.04;
+    letter-spacing:-.01em;
+    max-width:14ch;
+  }
+  h1 .row{
+    display:block;
+    overflow:hidden;
+  }
+  h1 .row span{
+    display:block;
+    transform:translateY(110%);
+    animation:riseUp .8s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  h1 .row:nth-child(1) span{animation-delay:.05s;}
+  h1 .row:nth-child(2) span{animation-delay:.18s; color:var(--gold);}
+  @keyframes riseUp{to{transform:translateY(0);}}
+
+  .hero-text h2{
+    font-family:var(--body);
+    font-weight:400;
+    font-size:clamp(16px,2vw,20px);
+    color:var(--muted);
+    margin-top:22px;
+    max-width:44ch;
+    opacity:0;
+    animation:fadeIn .8s ease forwards;
+    animation-delay:.55s;
+  }
+  .hero-text p.loc{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--muted);
+    margin-top:20px;
+    opacity:0;
+    animation:fadeIn .8s ease forwards;
+    animation-delay:.7s;
+  }
+  @keyframes fadeIn{to{opacity:1;}}
+
+  /* ---------- about ---------- */
+  .about-flex{display:flex; gap:40px; align-items:flex-start;}
+  .profile-img{
+    width:150px; height:150px; object-fit:cover;
+    border-radius:4px;
+    border:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .about-text p{color:#c9cddb; font-size:15.5px;}
+  @media (max-width:600px){.about-flex{flex-direction:column;}}
+
+  /* ---------- education ---------- */
+  .edu-row{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+  .edu-card{
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:6px;
+    padding:20px 22px;
+    position:relative;
+  }
+  .edu-card::before{
+    content:attr(data-range);
+    position:absolute; top:20px; right:22px;
+    font-family:var(--mono); font-size:12px; color:var(--muted);
+  }
+  .edu-card strong{font-family:var(--head); font-size:17px; font-weight:600; display:block; margin-bottom:6px;}
+  .edu-card .score{color:var(--gold); font-family:var(--mono); font-size:13px;}
+
+  /* ---------- internship ---------- */
+  .intern-card{
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:8px;
+    padding:26px 28px;
+  }
+  .intern-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .intern-head strong{font-family:var(--head); font-weight:600; font-size:18px;}
+  .intern-head span.duration{
+    font-family:var(--mono); font-size:12px; color:var(--gold);
+    border:1px solid var(--line); padding:4px 10px; border-radius:20px;
+  }
+  .intern-card p{color:#c9cddb; font-size:14.5px; margin-bottom:16px;}
+  .intern-projects{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  .intern-projects li{
+    font-size:13.5px; color:var(--muted);
+    padding-left:18px; position:relative;
+    line-height:1.6;
+  }
+  .intern-projects li strong{color:var(--paper); font-weight:600;}
+  .intern-projects li::before{
+    content:"→"; position:absolute; left:0; color:var(--blue);
+  }
+
+  /* ---------- experience ---------- */
+  .exp-list{list-style:none;}
+  .exp-item{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:24px;
+    padding:22px 0;
+    border-top:1px solid var(--line);
+  }
+  .exp-item:last-child{border-bottom:1px solid var(--line);}
+  .exp-year{font-family:var(--mono); font-size:13px; color:var(--blue); padding-top:2px;}
+  .exp-item strong{font-family:var(--head); font-weight:600; font-size:16.5px; display:block; margin-bottom:8px;}
+  .exp-item p{color:#b7bccf; font-size:14.5px; margin-top:4px;}
+  @media (max-width:560px){.exp-item{grid-template-columns:1fr;} .exp-year{padding-top:0;}}
+
+  /* ---------- projects ---------- */
+  .projects-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:20px;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+    position:relative;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .card::after{
+    content:"";
+    position:absolute; inset:0;
+    border:2px solid transparent;
+    border-radius:6px;
+    pointer-events:none;
+    transition:border-color .25s ease;
+  }
+  .card:hover{transform:translateY(-4px);}
+  .card:hover::after{border-color:var(--gold);}
+  .card img{width:100%; height:130px; object-fit:cover; display:block; filter:grayscale(35%); transition:filter .3s ease;}
+  .card:hover img{filter:grayscale(0%);}
+  .card-content{padding:16px 18px 20px;}
+  .card-content h3{font-family:var(--head); font-size:15.5px; font-weight:600; margin-bottom:8px;}
+  .card-content p{font-size:13px; color:var(--muted); line-height:1.55;}
+
+  /* ---------- skills ---------- */
+  .skills-grid{
+    display:flex; flex-wrap:wrap; gap:12px;
+  }
+  .skill-card{
+    display:flex; align-items:center; gap:10px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:10px 14px;
+    border-radius:20px;
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--paper);
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .skill-card:hover{border-color:var(--blue); background:var(--panel-2);}
+  .skill-card img{width:16px; height:16px; object-fit:contain;}
+
+  /* ---------- contact ---------- */
+  #contact{padding-bottom:80px;}
+  #contact a{color:var(--gold); text-decoration:none; border-bottom:1px solid transparent;}
+  #contact a:hover{border-bottom-color:var(--gold);}
+  #contact p{font-family:var(--mono); font-size:14px; margin-bottom:10px; color:#c9cddb;}
+  .social-icons{display:flex; gap:14px; margin-top:22px;}
+  .social-icons a{
+    width:36px; height:36px;
+    border:1px solid var(--line);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .social-icons a:hover{border-color:var(--gold); transform:translateY(-2px);}
+  .social-icons img{width:16px; height:16px;}
+
+  /* ---------- top navbar ---------- */
+  header{
+    position:fixed;
+    top:0; left:0; right:0; bottom:auto;
+    z-index:50;
+    display:flex;
+    justify-content:center;
+    pointer-events:none;
+  }
+  nav{
+    pointer-events:auto;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    background:rgba(18,23,41,.75);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    padding:16px 32px;
+  }
+  .nav-brand{
+    font-family:var(--head);
+    font-weight:600;
+    font-size:14px;
+    color:var(--gold);
+    letter-spacing:.01em;
+    white-space:nowrap;
+  }
+  nav ul{
+    display:flex;
+    gap:8px;
+    list-style:none;
+    overflow-x:auto;
+  }
+  nav a{
+    display:block;
+    font-family:var(--body);
+    font-weight:500;
+    font-size:13.5px;
+    color:var(--muted);
+    text-decoration:none;
+    padding:8px 14px;
+    white-space:nowrap;
+    position:relative;
+    border-radius:5px;
+    transition:color .2s ease, background .2s ease;
+  }
+  nav a::before{
+    content:"";
+    position:absolute; left:14px; right:14px; bottom:2px; height:2px;
+    background:var(--gold);
+    transform:scaleX(0);
+    transition:transform .25s ease;
+  }
+  nav a:hover{color:var(--paper); background:rgba(255,255,255,.05);}
+  nav a.active{color:var(--gold);}
+  nav a.active::before{transform:scaleX(1);}
+  @media (max-width:640px){
+    nav{padding:14px 18px; gap:12px;}
+    .nav-brand{display:none;}
+    nav ul{gap:2px;}
+    nav a{padding:8px 10px; font-size:11.5px;}
+  }
+
+  ::selection{background:var(--gold); color:var(--ink);}
+</style>
+</head>
+<body>
+
+  <div class="grid-bg" id="gridBg">
+    <div class="aurora a1"></div>
+    <div class="aurora a2"></div>
+    <div class="aurora a3"></div>
+    <div class="aurora a4"></div>
+  </div>
+
+  <header>
+    <nav>
+      <span class="nav-brand">Nasywa.S.W</span>
+      <ul>
+        <li><a href="#about" data-nav>about</a></li>
+        <li><a href="#education" data-nav>education</a></li>
+        <li><a href="#internship" data-nav>internship</a></li>
+        <li><a href="#organization" data-nav>organization</a></li>
+        <li><a href="#projects" data-nav>projects</a></li>
+        <li><a href="#skill" data-nav>skills</a></li>
+        <li><a href="#contact" data-nav>contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <section id="hero">
+      <div class="hero-text">
+        <p class="hero-eyebrow">// welcome<span class="blink"></span></p>
+        <h1>
+          <span class="row"><span>Nasywa Syafinka</span></span>
+          <span class="row"><span>Widyamara</span></span>
+        </h1>
+        <h2>Systems Analyst &amp; Data Enthusiast — turning raw business data into structure that makes sense.</h2>
+        <p class="loc">based in Gresik, Jawa Timur.</p>
+      </div>
+    </section>
+
+    <section id="about" class="reveal">
+      <h2 class="section-title" data-cell="A1">About</h2>
+      <div class="about-flex">
+        <img src="images/naswa.jpg" alt="Profile" class="profile-img" />
+        <div class="about-text">
+          <p>
+            I am a fresh graduate in Business Information Systems from
+            Politeknik Negeri Malang (GPA 3.71/4.00), with a strong focus
+            on data analysis and information systems. I have hands-on
+            experience collecting, processing, and analyzing data from
+            multiple sources, identifying business trends and patterns,
+            and presenting insights through interactive dashboards using
+            Excel, SQL, Python, Power BI, and Looker Studio. I gained
+            direct experience as a Systems Analyst during a 6-month
+            internship at PT Inti Daya Energitama, where I was involved
+            in three web-based system development projects, from
+            requirements analysis and system flow design to coordination
+            with development teams and clients. I have also completed
+            several data-focused virtual internships and job simulations,
+            including Kimia Farma x Rakamin Academy and the BCG X Data
+            Science Job Simulation via Forage, to continuously sharpen my
+            analytical and problem-solving skills. I'm comfortable
+            working cross-functionally, communicate well, and enjoy
+            learning new things to support data-driven decision making.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="reveal">
+      <h2 class="section-title" data-cell="B1">Education</h2>
+      <div class="edu-row">
+        <div class="edu-card" data-range="2022 — 2026">
+          <strong>Politeknik Negeri Malang</strong>
+          <span>D-IV Business Information System · Malang, East Java</span><br/>
+          <span class="score">GPA 3.71 / 4.00</span>
+        </div>
+        <div class="edu-card" data-range="2019 — 2022">
+          <strong>SMAN 1 Cerme</strong>
+          <span>Science Major · Gresik, East Java</span><br/>
+          <span class="score">Score 89.00</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="internship" class="reveal">
+      <h2 class="section-title" data-cell="C1">Internship</h2>
+      <div class="intern-card">
+        <div class="intern-head">
+          <strong>PT Inti Daya Energitama — Systems Analyst, Divisi Software System Development</strong>
+          <span class="duration">Jul–Dec 2025 · 5 months</span>
+        </div>
+        <p>
+          Placed in the Software System Development (SSD) division, involved
+          in three web-based system development projects — covering
+          requirements analysis, cross-team coordination, and testing before
+          handover to the client.
+        </p>
+        <ul class="intern-projects">
+          <li><strong>Scylla X</strong> (in collaboration with PT Pratesis) — a web-based Distribution Management System. Built cross-squad task lists (New Promotion, Export–Import data master), coordinated timeline estimates with the client, and tested development output.</li>
+          <li><strong>Web App Reporting</strong> (client: PT Pupuk Indonesia Utilitas) — a procurement record-keeping system. Reviewed the PRD, assisted with company data mapping, and validated developer output against specifications.</li>
+          <li><strong>Call of Duty (COD)</strong> (client: PT Pupuk Indonesia Utilitas) — a web-based Alarm Warning System for monitoring compressor and air dryer errors, integrated with PLC and WhatsApp API notifications. Built FE/BE task lists, designed UI screens, and joined a site visit to GGCP Gresik.</li>
         </ul>
-        <!-- <h1>Nasywa Syafinka Widyamara</h1> -->
-      </nav>
-    </header>
+      </div>
+    </section>
 
-    <main>
-      <section id="hero">
-        <div class="hero-text">
-          <h1>Nasywa Syafinka Widyamara</h1>
-          <h2>Systems Analyst & Data Enthusiast</h2>
-          <p>
-            Based in Malang, Indonesia.
-          </p>
-        </div>
-      </section>
+    <section id="organization" class="reveal">
+      <h2 class="section-title" data-cell="D1">Organization</h2>
+      <ul class="exp-list">
+        <li class="exp-item">
+          <span class="exp-year">2024</span>
+          <div>
+            <strong>Basket Liga Polinema — Event Volunteer</strong>
+            <p>Oversaw and coordinated supporter activities to ensure a safe, organized, and enthusiastic atmosphere during matches, contributing to the overall success of the event.</p>
+          </div>
+        </li>
+        <li class="exp-item">
+          <span class="exp-year">2019–2021</span>
+          <div>
+            <strong>Paskib SMAN 1 Cerme — Discipline Biro</strong>
+            <p>Maintained discipline and punctuality as part of the troop responsible for ceremonial flag-raising duties. Contributed to team performance that led to winning multiple flag ceremony competitions at the regional-national level.</p>
+          </div>
+        </li>
+        <li class="exp-item">
+          <span class="exp-year">2019–2020</span>
+          <div>
+            <strong>OSIS SMAN 1 Cerme — National Insight Staff</strong>
+            <p>Facilitated student development in national awareness and patriotic values through targeted OSIS programs.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
 
-      <section id="about">
-        <h2 class="section-title">About Me</h2>
-        <div class="section-content about-flex">
-          <img src="images/naswa.jpg" alt="Profile" class="profile-img" />
-          <div class="about-text">
-            <p>
-              I am a fresh graduate in Business Information Systems from
-              Politeknik Negeri Malang (GPA 3.71/4.00), with a strong focus
-              on data analysis and information systems. I have hands-on
-              experience collecting, processing, and analyzing data from
-              multiple sources, identifying business trends and patterns,
-              and presenting insights through interactive dashboards using
-              Excel, SQL, Python, Power BI, and Looker Studio. I gained
-              direct experience as a Systems Analyst during a 6-month
-              internship at PT Inti Daya Energitama, where I was involved
-              in three web-based system development projects, from
-              requirements analysis and system flow design to coordination
-              with development teams and clients. I have also completed
-              several data-focused virtual internships and job simulations,
-              including Kimia Farma x Rakamin Academy and the BCG X Data
-              Science Job Simulation via Forage, to continuously sharpen my
-              analytical and problem-solving skills. I'm comfortable
-              working cross-functionally, communicate well, and enjoy
-              learning new things to support data-driven decision making.
-            </p>
+    <section id="projects" class="reveal">
+      <h2 class="section-title" data-cell="E1">Projects</h2>
+      <div class="projects-grid">
+        <div class="card">
+          <img src="images/bcg.png" alt="Forage BCG" />
+          <div class="card-content">
+            <h3>Virtual Job Simulation — BCG</h3>
+            <p>Executed a customer churn analysis for XYZ Analytics using Python (Pandas/NumPy), engineered an 85% accurate random forest model, and delivered insights through visualization and an executive summary.</p>
           </div>
         </div>
-      </section>
-
-      <section id="education">
-        <h2 class="section-title">Education</h2>
-        <div class="section-content">
-          <p><strong>POLYTECHNIC NEGERI MALANG</strong> – Malang, East Java</p>
-          <p>D-IV Business Information System — GPA: 3.71/4.00</p>
-          <p>Aug 2022 – 2026 (expected)</p>
-          <br />
-          <p><strong>SMAN 1 CERME</strong> – Gresik, East Java</p>
-          <p>Science Major — Score: 89,00</p>
-          <p>July 2019 - 2022</p>
-        </div>
-      </section>
-
-      <section id="experience">
-        <h2 class="section-title">Experience</h2>
-        <div class="section-content">
-          <ul>
-            <li>
-              <strong>Basket Liga Polinema</strong> – Event Volunteer (2024)
-              <p>
-                - Oversaw and coordinated supporter activities to ensure a safe,
-                organized, and enthusiastic atmosphere during matches,
-                contributing to the overall success of the event.
-              </p>
-            </li>
-            <li>
-              <strong>Paskib SMAN 1 Cerme</strong> – Discipline Biro (2019–2021)
-              <p>
-                - Maintained discipline and punctuality as part of the troop
-                responsible for ceremonial flag-raising duties.
-              </p>
-              <p>
-                - Contributed to team performance that led to winning multiple
-                flag ceremony competitions at the regional-national level.
-              </p>
-            </li>
-            <li>
-              <strong>OSIS SMAN 1 Cerme</strong> – National Insight Staff
-              (2019-2020)
-              <p>
-                - Facilitated student development in national awareness and
-                patriotic values through targeted OSIS programs.
-              </p>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section id="projects">
-        <h2 class="section-title">Projects</h2>
-        <div class="projects-grid">
-          <div class="card">
-            <img src="images/bcg.png" alt="Forage BCG" />
-            <div class="card-content">
-              <h3>Virtual Job Simulation – BCG</h3>
-              <p>
-                Executed a customer churn analysis for XYZ Analytics using
-                Python (Pandas/NumPy), engineered an 85% accurate random forest
-                model, and delivered actionable insights through data
-                visualization and an executive summary.
-              </p>
-            </div>
-          </div>
-          <div class="card">
-            <img src="images/images.png" alt="Kimia Farma" />
-            <div class="card-content">
-              <h3>Kimia Farma x Rakamin</h3>
-              <p>
-                Developed an interactive analytics dashboard using Google
-                BigQuery and Looker Studio to visualize annual sales trends of
-                Kimia Farma's products from raw data, including performance
-                analysis, seasonal patterns, and strategic recommendations.
-              </p>
-            </div>
-          </div>
-          <div class="card">
-            <img src="images/web.png" alt="Kompen System" />
-            <div class="card-content">
-              <h3>IT Compensation Website System</h3>
-              <p>
-                Developed a dynamic website using PHP with the Laravel
-                framework, using MySQL database, implementing REST API for
-                seamless communication between front-end and back-end systems
-                with featuring role-based access, task approval workflows, REST
-                API integration with attendance system, and QR code validation
-                to digitize compensation processes.
-              </p>
-            </div>
-          </div>
-          <div class="card">
-            <img src="images/mob.png" alt="Kompen System" />
-            <div class="card-content">
-              <h3>IT Compensation Mobile System</h3>
-              <p>
-                This is the mobile version of the IT Compensation System using
-                dart and flutter, featuring Laravel backend integration,
-                real-time task tracking, QR code validation, REST API data
-                synchronization, and offline access support.
-              </p>
-            </div>
-          </div>
-          <div class="card">
-            <img src="images/survey.png" alt="Survey System" />
-            <div class="card-content">
-              <h3>Customer Satisfaction Website System</h3>
-              <p>
-                This is a website built with basic PHP that helps Polinema
-                improve by collecting feedback. Different users like students,
-                teachers, and companies can answer surveys made for their role.
-                Admins can see all survey results to find what needs
-                improvement. Everyone logs in with their own type of account..
-              </p>
-            </div>
+        <div class="card">
+          <img src="images/images.png" alt="Kimia Farma" />
+          <div class="card-content">
+            <h3>Kimia Farma x Rakamin</h3>
+            <p>Developed an interactive analytics dashboard using Google BigQuery and Looker Studio to visualize annual sales trends from raw data, including seasonal patterns and strategic recommendations.</p>
           </div>
         </div>
-      </section>
-
-      <section id="skill">
-        <h2 class="section-title">Skills</h2>
-        <div class="skills-grid">
-          <div class="skill-card">
-            <img src="images/sql.png" alt="SQL" />
-            <p>SQL</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/python.png" alt="Python" />
-            <p>Python</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/looker.png" alt="Looker" />
-            <p>Looker</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/notion.png" alt="Notion" />
-            <p>Notion</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/figma.png" alt="Figma" />
-            <p>Figma</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/html.png" alt="HTML" />
-            <p>HTML</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/css.png" alt="CSS" />
-            <p>CSS</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/js.png" alt="JavaScript" />
-            <p>JavaScript</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/laravel.png" alt="Laravel" />
-            <p>Laravel</p>
-          </div>
-          <div class="skill-card">
-            <img src="images/php.png" alt="PHP" />
-            <p>PHP</p>
+        <div class="card">
+          <img src="images/web.png" alt="Kompen System" />
+          <div class="card-content">
+            <h3>IT Compensation Website System</h3>
+            <p>Built with PHP/Laravel and MySQL, exposing a REST API with role-based access, task approval workflows, attendance integration, and QR code validation to digitize compensation processes.</p>
           </div>
         </div>
-      </section>
-
-      <section id="contact">
-        <h2 class="section-title">Contact Me</h2>
-        <div class="section-content">
-          <p>
-            Email:
-            <a href="mailto:syafinkaw@gmail.com" style="color: #64ffda"
-              >syafinkaw@gmail.com</a
-            >
-          </p>
-          <p>Phone: +62 858 5437 1845</p>
-          <p>
-            LinkedIn:
-            <a
-              href="https://www.linkedin.com/in/nasywasyafinka/"
-              target="_blank"
-              style="color: #64ffda"
-              >nasywasyafinka</a
-            >
-          </p>
-          <div class="social-icons">
-            <a href="mailto:syafinkaw@gmail.com" target="_blank"
-              ><img src="images/email.png" alt="Email"
-            /></a>
-            <a href="https://wa.me/6285854371845" target="_blank"
-              ><img src="images/whatsapp.png" alt="WhatsApp"
-            /></a>
-            <a
-              href="https://www.linkedin.com/in/nasywasyafinka/"
-              target="_blank"
-              ><img src="images/linkedin.png" alt="LinkedIn"
-            /></a>
-            <a href="https://instagram.com/nasywaamara" target="_blank"
-              ><img src="images/instagram.png" alt="Instagram"
-            /></a>
-            <a href="https://github.com/nasywasyafinka" target="_blank"
-              ><img src="images/github.png" alt="GitHub"
-            /></a>
-            <a
-              href="https://www.youtube.com/channel/UCTV1rhrLoGc7Ay3A-Ykrc5A"
-              target="_blank"
-              ><img src="images/yt.png" alt="youtube"
-            /></a>
+        <div class="card">
+          <img src="images/mob.png" alt="Kompen System Mobile" />
+          <div class="card-content">
+            <h3>IT Compensation Mobile System</h3>
+            <p>Mobile version built with Dart/Flutter, featuring Laravel backend integration, real-time task tracking, QR code validation, REST API sync, and offline access support.</p>
           </div>
         </div>
-      </section>
-    </main>
-  </body>
+        <div class="card">
+          <img src="images/survey.png" alt="Survey System" />
+          <div class="card-content">
+            <h3>Customer Satisfaction Website System</h3>
+            <p>A PHP feedback platform for Polinema — students, teachers, and companies each answer role-specific surveys, while admins review results to identify areas for improvement.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skill" class="reveal">
+      <h2 class="section-title" data-cell="F1">Skills</h2>
+      <div class="skills-grid">
+        <div class="skill-card"><img src="images/sql.png" alt="SQL" /><span>SQL</span></div>
+        <div class="skill-card"><img src="images/python.png" alt="Python" /><span>Python</span></div>
+        <div class="skill-card"><img src="images/looker.png" alt="Looker" /><span>Looker</span></div>
+        <div class="skill-card"><img src="images/notion.png" alt="Notion" /><span>Notion</span></div>
+        <div class="skill-card"><img src="images/figma.png" alt="Figma" /><span>Figma</span></div>
+        <div class="skill-card"><img src="images/html.png" alt="HTML" /><span>HTML</span></div>
+        <div class="skill-card"><img src="images/css.png" alt="CSS" /><span>CSS</span></div>
+        <div class="skill-card"><img src="images/js.png" alt="JavaScript" /><span>JavaScript</span></div>
+        <div class="skill-card"><img src="images/laravel.png" alt="Laravel" /><span>Laravel</span></div>
+        <div class="skill-card"><img src="images/php.png" alt="PHP" /><span>PHP</span></div>
+      </div>
+    </section>
+
+    <section id="contact" class="reveal">
+      <h2 class="section-title" data-cell="G1">Contact</h2>
+      <p>Email: <a href="mailto:syafinkaw@gmail.com">syafinkaw@gmail.com</a></p>
+      <p>Phone: +62 858 5437 1845</p>
+      <p>LinkedIn: <a href="https://www.linkedin.com/in/nasywasyafinka/" target="_blank">nasywasyafinka</a></p>
+      <div class="social-icons">
+        <a href="mailto:syafinkaw@gmail.com" target="_blank"><img src="images/email.png" alt="Email" /></a>
+        <a href="https://wa.me/6285854371845" target="_blank"><img src="images/whatsapp.png" alt="WhatsApp" /></a>
+        <a href="https://www.linkedin.com/in/nasywasyafinka/" target="_blank"><img src="images/linkedin.png" alt="LinkedIn" /></a>
+        <a href="https://instagram.com/nasywaamara" target="_blank"><img src="images/instagram.png" alt="Instagram" /></a>
+        <a href="https://github.com/nasywasyafinka" target="_blank"><img src="images/github.png" alt="GitHub" /></a>
+        <a href="https://www.youtube.com/channel/UCTV1rhrLoGc7Ay3A-Ykrc5A" target="_blank"><img src="images/yt.png" alt="youtube" /></a>
+      </div>
+    </section>
+
+  </main>
+
+<script>
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
+  revealEls.forEach(el=>io.observe(el));
+
+  // background grid subtle parallax
+  const gridBg = document.getElementById('gridBg');
+  window.addEventListener('scroll', ()=>{
+    const y = window.scrollY * 0.04;
+    gridBg.style.transform = `translateY(${y}px)`;
+  }, {passive:true});
+
+  // active sheet-tab tracking
+  const navLinks = document.querySelectorAll('[data-nav]');
+  const sections = Array.from(navLinks).map(a=>document.querySelector(a.getAttribute('href')));
+  const navIo = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      const link = document.querySelector(`[data-nav][href="#${entry.target.id}"]`);
+      if(entry.isIntersecting){
+        navLinks.forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, {threshold:.4, rootMargin:'-30% 0px -40% 0px'});
+  sections.forEach(s=> s && navIo.observe(s));
+</script>
+
+</body>
 </html>
